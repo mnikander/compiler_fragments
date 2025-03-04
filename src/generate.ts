@@ -13,49 +13,51 @@ import { is_subtract, generate_subtract } from "./lexeme/subtract";
 import { is_equal, generate_equal } from "./lexeme/equal";
 import { is_lambda, generate_lambda } from "./lexeme/lambda";
 import { is_if, generate_if } from "./lexeme/if";
+import { CppDocument } from "./cpp_document";
 
 // TODO: set reasonable type information for the 'ast' parameter
-export function generate(ast: any): string {
+export function generate(ast: any, doc: CppDocument): CppDocument {
     if (ast instanceof Array) {
         if (is_display(ast)) {
-            return generate_display(ast);
+            doc = generate_display(ast, doc);
         }
         else if (is_error(ast)) {
-            return generate_error(ast);
+            doc = generate_error(ast, doc);
         }
         else if (is_add(ast)) {
-            return generate_add(ast);
+            doc = generate_add(ast, doc);
         }
         else if (is_subtract(ast)) {
-            return generate_subtract(ast);
+            doc = generate_subtract(ast, doc);
         }
         else if (is_multiply(ast)) {
-            return generate_multiply(ast);
+            doc = generate_multiply(ast, doc);
         }
         else if (is_divide(ast)) {
-            return generate_divide(ast);
+            doc = generate_divide(ast, doc);
         }
         else if (is_equal(ast)) {
-            return generate_equal(ast);
+            doc = generate_equal(ast, doc);
         }
         else if (is_define(ast)) {
-            return generate_define(ast);
+            doc = generate_define(ast, doc);
         }
         else if (is_lambda(ast)) {
-            return generate_lambda(ast);
+            doc = generate_lambda(ast, doc);
         }
         else if (is_if(ast)) {
-            return generate_if(ast);
+            doc = generate_if(ast, doc);
         }
         else {
-            return generate_function_application(ast);
+            doc = generate_function_application(ast, doc);
         }
     }
     else if (typeof ast !== 'undefined') {
-        return generate_atom(ast);
+        doc = generate_atom(ast, doc);
     }
     else {
         assert(false, "undefined node");
-        return "/* ERROR: UNDEFINED NODE */";
+        doc.body += "/* ERROR: UNDEFINED NODE */";
     }
+    return doc;
 }

@@ -1,25 +1,26 @@
 // Copyright (c) 2025 Marco Nikander
 
 import assert from "assert";
-import { generate } from "../generate";
+import { CppDocument } from "../cpp_document";
 
-export function generate_atom(ast: any): string {
+export function generate_atom(ast: any, doc: CppDocument): CppDocument {
     if (typeof ast === 'string') {
         if (ast == "True") {
-            return "true";
+            doc.body += "true";
         }
         else if (ast === "False") {
-            return "false";
+            doc.body += "false";
         }
         else {
-            return ast;
+            doc.body += ast;
         }
     }
     else if (ast !== Object(ast)) { // primitive data-type (not an object)
-        return ast.toString();
+        doc.body += ast.toString();
     }
     else {
         assert(false, `invalid symbol <${ast.toString()}> of type <${typeof ast}>`);
-        return "/* ERROR: INVALID SYMBOL */";
+        doc.body += "/* ERROR: INVALID SYMBOL */";
     }
+    return doc;
 }

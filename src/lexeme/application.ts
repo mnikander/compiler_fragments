@@ -1,19 +1,19 @@
 // Copyright (c) 2025 Marco Nikander
 
 import assert from "assert";
+import { CppDocument } from "../cpp_document";
 import { generate } from "../generate";
 
-export function generate_function_application(ast: any[]): string {
+export function generate_function_application(ast: any[], doc: CppDocument): CppDocument {
     let [head, ...tail] = ast;
-    let result = "";
-    result += generate(head);
-    result += "(";
+    doc = generate(head, doc);
+    doc.body += "(";
     for (let i = 0; i < tail.length; i++) {
-        result += `${generate(tail[i])}`;
+        doc = generate(tail[i], doc);
         if ((i + 1) < tail.length) {
-            result += ', ';
+            doc.body += ', ';
         }
     }
-    result +=  ")";
-    return result;
+    doc.body +=  ")";
+    return doc;
 }
