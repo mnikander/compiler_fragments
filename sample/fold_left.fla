@@ -1,0 +1,6 @@
+(define fold_left
+(lambda (f init list)
+    (if (empty list)
+        init
+        (fold_left f (f init (head list)) (tail list)))))
+
